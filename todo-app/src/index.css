@@ -1,0 +1,97 @@
+/* ===================================================
+   index.css — Global resets and base styles
+   =================================================== */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* ---- CSS Variables: Aesthetic Theme (default) ---- */
+:root,
+[data-theme="aesthetic"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #242424;
+  --bg-card: rgba(255, 182, 193, 0.08);
+  --accent-1: #ffb6c1;
+  --accent-2: #ff6ec7;
+  --accent-gradient: linear-gradient(135deg, #ff6ec7, #ffb6c1);
+  --text-primary: #f5f5f5;
+  --text-secondary: #ccc;
+  --text-muted: #999;
+  --border-color: rgba(255, 182, 193, 0.2);
+  --shadow-card: 0 8px 32px rgba(255, 110, 199, 0.1);
+  --shadow-card-hover: 0 12px 40px rgba(255, 110, 199, 0.2);
+  --glass-bg: rgba(255, 182, 193, 0.06);
+  --glass-border: rgba(255, 182, 193, 0.15);
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --main-bg: linear-gradient(145deg, #fff5f7 0%, #fce4ec 20%, #f8bbd0 45%, #fce4ec 70%, #fff0f5 100%);
+  --main-shadow: 0 8px 40px rgba(255, 182, 193, 0.3), 0 2px 8px rgba(255, 110, 199, 0.08);
+  --main-border: 1px solid rgba(255, 255, 255, 0.6);
+  --toggle-bg-off: #444;
+  --toggle-bg-on: #ff6ec7;
+  --toggle-thumb: #ffb6c1;
+  --heading-font: "Dancing Script", cursive;
+  --subheading-font: "Playfair Display", serif;
+  --body-font: "Poppins", sans-serif;
+  --radius-card: 20px;
+  --radius-btn: 12px;
+  --radius-input: 14px;
+  --glow: none;
+  --border-card: 1px solid var(--glass-border);
+}
+
+/* ---- CSS Variables: Bold Theme ---- */
+[data-theme="bold"] {
+  --bg-primary: #111111;
+  --bg-secondary: #1a1a2e;
+  --bg-card: rgba(0, 170, 255, 0.06);
+  --accent-1: #00aaff;
+  --accent-2: #0057ff;
+  --accent-gradient: linear-gradient(135deg, #0057ff, #00aaff);
+  --text-primary: #f0f0f0;
+  --text-secondary: #b0b0b0;
+  --text-muted: #777;
+  --border-color: rgba(0, 170, 255, 0.3);
+  --shadow-card: 0 0 20px rgba(0, 170, 255, 0.1);
+  --shadow-card-hover: 0 0 30px rgba(0, 170, 255, 0.25);
+  --glass-bg: rgba(0, 170, 255, 0.04);
+  --glass-border: rgba(0, 170, 255, 0.25);
+  --input-bg: rgba(0, 170, 255, 0.05);
+  --main-bg: linear-gradient(145deg, #f0f8ff 0%, #dce9f7 20%, #b8d8f0 45%, #dce9f7 70%, #f0f8ff 100%);
+  --main-shadow: 0 8px 40px rgba(0, 170, 255, 0.2), 0 2px 8px rgba(0, 87, 255, 0.08);
+  --main-border: 1px solid rgba(255, 255, 255, 0.5);
+  --toggle-bg-off: #333;
+  --toggle-bg-on: #00aaff;
+  --toggle-thumb: #0057ff;
+  --heading-font: "Orbitron", sans-serif;
+  --subheading-font: "Poppins", sans-serif;
+  --body-font: "Poppins", sans-serif;
+  --radius-card: 8px;
+  --radius-btn: 6px;
+  --radius-input: 8px;
+  --glow: 0 0 10px rgba(0, 170, 255, 0.3);
+  --border-card: 2px solid var(--glass-border);
+}
+
+a {
+  color: var(--accent-1);
+  text-decoration: none;
+}
