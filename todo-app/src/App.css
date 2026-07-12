@@ -1076,6 +1076,16 @@
     padding: 7px 14px;
     font-size: 0.82rem;
   }
+
+  .checkbox-custom {
+    width: 20px;
+    height: 20px;
+  }
+
+  .checkbox-custom::after {
+    width: 8px;
+    height: 5px;
+  }
 }
 
 /* Mobile phones */
@@ -1083,8 +1093,8 @@
   .app-header {
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    padding: 16px 14px 14px;
+    gap: 10px;
+    padding: 14px 14px 12px;
   }
 
   .header-content {
@@ -1093,81 +1103,84 @@
   }
 
   .app-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .current-date {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
+    margin-top: 0;
   }
 
   .theme-toggle-wrapper {
-    gap: 8px;
+    gap: 6px;
   }
 
   .toggle-label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.03em;
   }
 
   .toggle-track {
-    width: 48px;
-    height: 24px;
+    width: 44px;
+    height: 22px;
+    padding: 2px;
   }
 
   .toggle-thumb {
     width: 18px;
     height: 18px;
-    font-size: 11px;
+    font-size: 10px;
   }
 
   .theme-toggle input:checked + .toggle-track .toggle-thumb {
-    transform: translateX(24px);
+    transform: translateX(22px);
   }
 
   .app-main {
-    margin: 8px 8px;
-    padding: 18px 12px 28px;
-    border-radius: 18px;
+    margin: 6px 6px;
+    padding: 16px 10px 24px;
+    border-radius: 16px;
   }
 
   .add-task-form {
-    flex-direction: row;
-    gap: 8px;
-    margin-bottom: 18px;
+    gap: 6px;
+    margin-bottom: 14px;
   }
 
   .add-task-input {
-    padding: 12px 14px;
-    font-size: 0.9rem;
-    border-radius: 12px;
+    padding: 11px 12px;
+    font-size: 0.88rem;
+    border-radius: 10px;
   }
 
   .add-task-btn {
-    width: 44px;
-    height: 44px;
-    font-size: 1.3rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
     border-radius: 10px;
   }
 
   .filter-bar {
-    gap: 6px;
-    margin-bottom: 16px;
-    justify-content: center;
+    gap: 5px;
+    margin-bottom: 14px;
   }
 
   .filter-btn {
-    padding: 6px 12px;
-    font-size: 0.78rem;
-    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    border-radius: 7px;
   }
 
   .task-card {
-    padding: 14px 12px 12px;
-    gap: 8px;
-    border-radius: 14px;
+    padding: 12px 10px 10px;
+    gap: 7px;
+    border-radius: 12px;
+    margin-bottom: 12px;
   }
 
   .task-text {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
   }
 
   .task-actions {
@@ -1176,68 +1189,142 @@
   }
 
   .task-action-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 0.8rem;
-    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+    border-radius: 6px;
+  }
+
+  .checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border-width: 2px;
+  }
+
+  .checkbox-custom::after {
+    width: 7px;
+    height: 4px;
+    border-left-width: 2px;
+    border-bottom-width: 2px;
+    margin-top: -1px;
   }
 
   .task-timestamp {
-    font-size: 0.68rem;
+    font-size: 0.65rem;
+  }
+
+  .task-edit-input {
+    padding: 5px 8px;
+    font-size: 0.85rem;
   }
 
   .empty-state {
-    padding: 32px 16px;
-    font-size: 0.9rem;
+    padding: 28px 12px;
+    font-size: 0.85rem;
   }
 
   .app-footer {
-    padding: 20px 16px;
+    padding: 16px 12px;
+  }
+
+  .app-footer::before {
+    font-size: 0.75rem;
+    margin-bottom: 6px;
   }
 
   .quote {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  .masonry-grid {
+    columns: 1;
   }
 }
 
 /* Very small phones */
 @media (max-width: 360px) {
   .app-header {
-    padding: 12px 10px 10px;
+    padding: 10px 8px 8px;
+    gap: 6px;
   }
 
   .app-title {
-    font-size: 1.3rem;
-  }
-
-  .app-main {
-    margin: 6px 6px;
-    padding: 14px 10px 24px;
-    border-radius: 14px;
-  }
-
-  .add-task-input {
-    padding: 10px 12px;
-    font-size: 0.85rem;
-  }
-
-  .add-task-btn {
-    width: 40px;
-    height: 40px;
     font-size: 1.2rem;
   }
 
+  .current-date {
+    font-size: 0.72rem;
+  }
+
+  .toggle-track {
+    width: 40px;
+    height: 20px;
+  }
+
+  .toggle-thumb {
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+  }
+
+  .theme-toggle input:checked + .toggle-track .toggle-thumb {
+    transform: translateX(20px);
+  }
+
+  .toggle-label {
+    font-size: 0.6rem;
+  }
+
+  .app-main {
+    margin: 4px 4px;
+    padding: 12px 8px 20px;
+    border-radius: 12px;
+  }
+
+  .add-task-input {
+    padding: 9px 10px;
+    font-size: 0.82rem;
+  }
+
+  .add-task-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+
   .filter-btn {
-    padding: 5px 10px;
-    font-size: 0.75rem;
+    padding: 4px 8px;
+    font-size: 0.7rem;
   }
 
   .task-card {
-    padding: 12px 10px 10px;
+    padding: 10px 8px 8px;
+    gap: 6px;
+    border-radius: 10px;
+    margin-bottom: 10px;
   }
 
   .task-text {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
+  }
+
+  .task-action-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 0.7rem;
+  }
+
+  .checkbox-custom {
+    width: 16px;
+    height: 16px;
+  }
+
+  .checkbox-custom::after {
+    width: 6px;
+    height: 4px;
+    border-left-width: 1.5px;
+    border-bottom-width: 1.5px;
   }
 }
 
