@@ -1,19 +1,33 @@
 import { useState, useEffect } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import AuthPage from "./components/AuthPage";
 import Header from "./components/Header";
 import AddTaskForm from "./components/AddTaskForm";
 import TaskList from "./components/TaskList";
+import StreakTracker from "./components/StreakTracker";
 import Footer from "./components/Footer";
 import "./App.css";
 
-/**
- * Root component. Manages the task list in state and persists it
- * to localStorage. Wraps everything in the ThemeProvider.
- */
-function App() {
+function getTodayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getYesterdayStr() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+function TodoApp() {
+  const { user } = useAuth();
+
+  const tasksKey = `todo-tasks-${user.id}`;
+  const streakKey = `todo-streak-${user.id}`;
+
   const [tasks, setTasks] = useState(() => {
     try {
-      const stored = localStorage.getItem("todo-tasks");
+      const stored = localStorage.getItem(tasksKey);
       return stored ? JSON.parse(stored) : [];
     } catch {
       return [];
@@ -22,12 +36,62 @@ function App() {
 
   const [filter, setFilter] = useState("all");
 
-  // Persist tasks to localStorage whenever they change
+  const [streak, setStreak] = useState(() => {
+    try {
+      const stored = localStorage.getItem(streakKey);
+      return stored
+        ? JSON.parse(stored)
+        : { currentStreak: 0, longestStreak: 0, lastCompletedDate: null };
+    } catch {
+      return { currentStreak: 0, longestStreak: 0, lastCompletedDate: null };
+    }
+  });
+
   useEffect(() => {
-    localStorage.setItem("todo-tasks", JSON.stringify(tasks));
+    localStorage.setItem(tasksKey, JSON.stringify(tasks));
+  }, [tasks, tasksKey]);
+
+  useEffect(() => {
+    localStorage.setItem(streakKey, JSON.stringify(streak));
+  }, [streak, streakKey]);
+
+  useEffect(() => {
+    const today = getTodayStr();
+    const todayTasks = tasks.filter(
+      (t) => t.createdAt.slice(0, 10) === today
+    );
+
+    if (todayTasks.length === 0) return;
+
+    const allDone = todayTasks.every((t) => t.completed);
+
+    setStreak((prev) => {
+      if (allDone) {
+        if (prev.lastCompletedDate === today) return prev;
+
+        const yesterday = getYesterdayStr();
+        const isConsecutive = prev.lastCompletedDate === yesterday;
+        const newCurrent = isConsecutive ? prev.currentStreak + 1 : 1;
+
+        return {
+          currentStreak: newCurrent,
+          longestStreak: Math.max(prev.longestStreak, newCurrent),
+          lastCompletedDate: today,
+        };
+      }
+
+      if (!allDone && prev.lastCompletedDate === today) {
+        return {
+          currentStreak: 0,
+          longestStreak: prev.longestStreak,
+          lastCompletedDate: null,
+        };
+      }
+
+      return prev;
+    });
   }, [tasks]);
 
-  // Add a new task
   const addTask = (text) => {
     setTasks((prev) => [
       {
@@ -36,48 +100,68 @@ function App() {
         completed: false,
         createdAt: new Date().toISOString(),
       },
-      ...prev, // newest first
+      ...prev,
     ]);
   };
 
-  // Toggle completion status
   const toggleTask = (id) => {
     setTasks((prev) =>
       prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
     );
   };
 
-  // Delete a task
   const deleteTask = (id) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // Edit a task's text
   const editTask = (id, newText) => {
     setTasks((prev) =>
       prev.map((t) => (t.id === id ? { ...t, text: newText } : t))
     );
   };
 
+  const todayStr = getTodayStr();
+  const todayTasks = tasks.filter((t) => t.createdAt.slice(0, 10) === todayStr);
+  const todayComplete =
+    todayTasks.length > 0 && todayTasks.every((t) => t.completed);
+
+  return (
+    <div className="app">
+      <Header />
+      <main className="app-main">
+        <StreakTracker
+          currentStreak={streak.currentStreak}
+          todayComplete={todayComplete}
+        />
+        <AddTaskForm onAdd={addTask} />
+        <TaskList
+          tasks={tasks}
+          filter={filter}
+          onFilterChange={setFilter}
+          onToggle={toggleTask}
+          onDelete={deleteTask}
+          onEdit={editTask}
+        />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function App() {
+  const { user } = useAuth();
+
   return (
     <ThemeProvider>
-      <div className="app">
-        <Header />
-        <main className="app-main">
-          <AddTaskForm onAdd={addTask} />
-          <TaskList
-            tasks={tasks}
-            filter={filter}
-            onFilterChange={setFilter}
-            onToggle={toggleTask}
-            onDelete={deleteTask}
-            onEdit={editTask}
-          />
-        </main>
-        <Footer />
-      </div>
+      {user ? <TodoApp key={user.id} /> : <AuthPage />}
     </ThemeProvider>
   );
 }
 
-export default App;
+export default function Root() {
+  return (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  );
+}

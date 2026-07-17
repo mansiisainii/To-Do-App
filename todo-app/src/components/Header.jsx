@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "../context/ThemeContext";
+import { useAuth } from "../context/AuthContext";
+import { LogOut } from "lucide-react";
 
-/**
- * Header displays the current date (auto-updating daily) and the
- * aesthetic / bold theme toggle switch.
- */
 export default function Header() {
   const { theme, toggleTheme } = useTheme();
+  const { user, logout } = useAuth();
   const [dateStr, setDateStr] = useState(formatDate());
 
-  // Re-check date every minute so it updates around midnight
   useEffect(() => {
     const interval = setInterval(() => setDateStr(formatDate()), 60000);
     return () => clearInterval(interval);
@@ -22,32 +20,40 @@ export default function Header() {
         <p className="current-date">{dateStr}</p>
       </div>
 
-      {/* Theme toggle switch */}
-      <div className="theme-toggle-wrapper">
-        <span className="toggle-label toggle-label-left">
-          Toggle
-        </span>
-        <label className="theme-toggle" aria-label="Toggle theme">
-          <input
-            type="checkbox"
-            checked={theme === "bold"}
-            onChange={toggleTheme}
-          />
-          <span className="toggle-track">
-            <span className="toggle-thumb">
-              {theme === "aesthetic" ? "\u2600" : "\u263E"}
+      <div className="header-actions">
+        <div className="theme-toggle-wrapper">
+          <span className="toggle-label toggle-label-left">Toggle</span>
+          <label className="theme-toggle" aria-label="Toggle theme">
+            <input
+              type="checkbox"
+              checked={theme === "bold"}
+              onChange={toggleTheme}
+            />
+            <span className="toggle-track">
+              <span className="toggle-thumb">
+                {theme === "aesthetic" ? "\u2600" : "\u263E"}
+              </span>
             </span>
-          </span>
-        </label>
-        <span className="toggle-label toggle-label-right">
-          Theme
-        </span>
+          </label>
+          <span className="toggle-label toggle-label-right">Theme</span>
+        </div>
+
+        <div className="user-section">
+          <span className="user-name">{user?.username}</span>
+          <button
+            className="logout-btn"
+            onClick={logout}
+            aria-label="Log out"
+            title="Log out"
+          >
+            <LogOut size={16} />
+          </button>
+        </div>
       </div>
     </header>
   );
 }
 
-/** Format today's date as "Sunday, July 12, 2026" */
 function formatDate() {
   return new Date().toLocaleDateString("en-US", {
     weekday: "long",
