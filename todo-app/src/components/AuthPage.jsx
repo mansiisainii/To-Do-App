@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { LogIn, UserPlus, Mail } from "lucide-react";
+import { LogIn, UserPlus } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { GirlAvatar, BoyAvatar } from "./Avatars";
 
 export default function AuthPage() {
   const { login, signup } = useAuth();
@@ -8,6 +9,7 @@ export default function AuthPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState("girl");
   const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
@@ -28,7 +30,7 @@ export default function AuthPage() {
       setError("Password must be at least 4 characters");
       return;
     }
-    const result = isSignup ? signup(u, em, p) : login(u, p);
+    const result = isSignup ? signup(u, em, p, avatar) : login(u, p);
     if (!result.ok) setError(result.error);
   };
 
@@ -38,6 +40,7 @@ export default function AuthPage() {
     setUsername("");
     setEmail("");
     setPassword("");
+    setAvatar("girl");
   };
 
   return (
@@ -49,6 +52,28 @@ export default function AuthPage() {
         </p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
+          {isSignup && (
+            <div className="auth-avatar-picker">
+              <label className="auth-label">Choose Avatar</label>
+              <div className="avatar-options">
+                <button
+                  type="button"
+                  className={`avatar-option ${avatar === "girl" ? "selected" : ""}`}
+                  onClick={() => setAvatar("girl")}
+                >
+                  <GirlAvatar size={52} />
+                </button>
+                <button
+                  type="button"
+                  className={`avatar-option ${avatar === "boy" ? "selected" : ""}`}
+                  onClick={() => setAvatar("boy")}
+                >
+                  <BoyAvatar size={52} />
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="auth-field">
             <label className="auth-label" htmlFor="auth-username">
               {isSignup ? "Username" : "Username or Email"}

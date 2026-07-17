@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
     }
   }, [user]);
 
-  const signup = (username, email, password) => {
+  const signup = (username, email, password, avatar) => {
     const users = getUsers();
     if (users.find((u) => u.username === username)) {
       return { ok: false, error: "Username already exists" };
@@ -49,11 +49,12 @@ export function AuthProvider({ children }) {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
       username,
       email,
+      avatar,
       password: hashPassword(password),
     };
     users.push(newUser);
     localStorage.setItem("todo-users", JSON.stringify(users));
-    setUser({ id: newUser.id, username: newUser.username });
+    setUser({ id: newUser.id, username: newUser.username, email: newUser.email, avatar: newUser.avatar });
     return { ok: true };
   };
 
@@ -67,7 +68,7 @@ export function AuthProvider({ children }) {
     if (!found) {
       return { ok: false, error: "Invalid credentials" };
     }
-    setUser({ id: found.id, username: found.username });
+    setUser({ id: found.id, username: found.username, email: found.email, avatar: found.avatar || "girl" });
     return { ok: true };
   };
 

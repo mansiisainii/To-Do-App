@@ -127,7 +127,7 @@ function TodoApp() {
 
   return (
     <div className="app">
-      <Header />
+      <Header currentStreak={streak.currentStreak} />
       <main className="app-main">
         <StreakTracker
           currentStreak={streak.currentStreak}

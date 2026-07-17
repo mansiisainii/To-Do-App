@@ -100,6 +100,50 @@
   box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.15);
 }
 
+.auth-avatar-picker {
+  text-align: center;
+}
+
+.auth-avatar-picker .auth-label {
+  text-align: center;
+}
+
+.avatar-options {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.avatar-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 6px;
+}
+
+.avatar-option:hover {
+  border-color: var(--accent-1);
+  transform: scale(1.08);
+}
+
+.avatar-option.selected {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 3px rgba(255, 110, 199, 0.2);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="bold"] .avatar-option.selected {
+  box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.2);
+}
+
 .auth-error {
   font-size: 0.82rem;
   color: #e53935;
@@ -379,12 +423,6 @@
   gap: 16px;
 }
 
-.user-section {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .user-name {
   font-family: var(--subheading-font);
   font-size: 0.82rem;
@@ -414,6 +452,108 @@
   color: #e53935;
   border-color: #e53935;
   transform: translateY(-1px);
+}
+
+/* ---- Profile Button & Card ---- */
+.profile-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background: var(--glass-bg);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.profile-btn:hover {
+  border-color: var(--accent-1);
+  transform: translateY(-1px);
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.profile-card {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 240px;
+  padding: 24px 20px;
+  background: var(--main-bg);
+  border-radius: 18px;
+  border: var(--main-border);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(12px);
+  z-index: 200;
+  animation: cardIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  padding: 4px;
+  overflow: hidden;
+}
+
+.profile-info {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.profile-name {
+  font-family: var(--heading-font);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3a3a3a;
+  margin-bottom: 2px;
+}
+
+.profile-email {
+  font-size: 0.78rem;
+  color: #888;
+  word-break: break-all;
+}
+
+.profile-streak {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.profile-streak-icon {
+  color: var(--accent-2);
+}
+
+.profile-streak-count {
+  font-family: var(--heading-font);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #3a3a3a;
+}
+
+.profile-streak-label {
+  font-size: 0.78rem;
+  color: #777;
 }
 
 /* ---- Add Task Form ---- */
