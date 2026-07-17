@@ -669,7 +669,7 @@
 }
 
 .streak-box-count {
-  font-family: var(--body-font);
+  font-family: var(--heading-font);
   font-size: 1.15rem;
   font-weight: 700;
   color: #3a3a3a;

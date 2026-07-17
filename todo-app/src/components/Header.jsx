@@ -39,7 +39,6 @@ export default function Header({ currentStreak }) {
 
       <div className="header-actions">
         <div className="theme-toggle-wrapper">
-          <span className="toggle-label toggle-label-left">Toggle</span>
           <label className="theme-toggle" aria-label="Toggle theme">
             <input
               type="checkbox"
@@ -52,7 +51,6 @@ export default function Header({ currentStreak }) {
               </span>
             </span>
           </label>
-          <span className="toggle-label toggle-label-right">Theme</span>
         </div>
 
         <div className="user-section" ref={profileRef}>
