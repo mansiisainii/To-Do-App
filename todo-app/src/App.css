@@ -551,6 +551,10 @@
   color: #3a3a3a;
 }
 
+[data-theme="bold"] .profile-streak-count {
+  font-family: var(--heading-font), system-ui, sans-serif;
+}
+
 .profile-streak-label {
   font-size: 0.78rem;
   color: #777;
@@ -674,6 +678,10 @@
   font-weight: 700;
   color: #3a3a3a;
   line-height: 1;
+}
+
+[data-theme="bold"] .streak-box-count {
+  font-family: var(--heading-font), system-ui, sans-serif;
 }
 
 .streak-box.active .streak-box-count {

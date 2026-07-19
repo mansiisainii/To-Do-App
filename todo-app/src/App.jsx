@@ -66,29 +66,19 @@ function TodoApp() {
     const allDone = todayTasks.every((t) => t.completed);
 
     setStreak((prev) => {
-      if (allDone) {
-        if (prev.lastCompletedDate === today) return prev;
+      if (!allDone) return prev;
 
-        const yesterday = getYesterdayStr();
-        const isConsecutive = prev.lastCompletedDate === yesterday;
-        const newCurrent = isConsecutive ? prev.currentStreak + 1 : 1;
+      if (prev.lastCompletedDate === today) return prev;
 
-        return {
-          currentStreak: newCurrent,
-          longestStreak: Math.max(prev.longestStreak, newCurrent),
-          lastCompletedDate: today,
-        };
-      }
+      const yesterday = getYesterdayStr();
+      const isConsecutive = prev.lastCompletedDate === yesterday;
+      const newCurrent = isConsecutive ? prev.currentStreak + 1 : 1;
 
-      if (!allDone && prev.lastCompletedDate === today) {
-        return {
-          currentStreak: 0,
-          longestStreak: prev.longestStreak,
-          lastCompletedDate: null,
-        };
-      }
-
-      return prev;
+      return {
+        currentStreak: newCurrent,
+        longestStreak: Math.max(prev.longestStreak, newCurrent),
+        lastCompletedDate: today,
+      };
     });
   }, [tasks]);
 
@@ -105,9 +95,20 @@ function TodoApp() {
   };
 
   const toggleTask = (id) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
+    setTasks((prev) => {
+      const task = prev.find((t) => t.id === id);
+      if (task && task.completed) {
+        setStreak((s) => {
+          const revertedStreak = Math.max(0, s.currentStreak - 1);
+          return {
+            currentStreak: revertedStreak,
+            longestStreak: s.longestStreak,
+            lastCompletedDate: revertedStreak > 0 ? getYesterdayStr() : null,
+          };
+        });
+      }
+      return prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t));
+    });
   };
 
   const deleteTask = (id) => {
