@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import AuthPage from "./components/AuthPage";
@@ -41,9 +41,19 @@ function TodoApp() {
       const stored = localStorage.getItem(streakKey);
       return stored
         ? JSON.parse(stored)
-        : { currentStreak: 0, longestStreak: 0, lastCompletedDate: null };
+        : {
+            currentStreak: 0,
+            longestStreak: 0,
+            lastCompletedDate: null,
+            lastProcessedDate: null,
+          };
     } catch {
-      return { currentStreak: 0, longestStreak: 0, lastCompletedDate: null };
+      return {
+        currentStreak: 0,
+        longestStreak: 0,
+        lastCompletedDate: null,
+        lastProcessedDate: null,
+      };
     }
   });
 
@@ -55,32 +65,86 @@ function TodoApp() {
     localStorage.setItem(streakKey, JSON.stringify(streak));
   }, [streak, streakKey]);
 
-  useEffect(() => {
+  const tasksRef = useRef(tasks);
+  tasksRef.current = tasks;
+
+  const findPreviousActiveDay = (checkDate) => {
+    let d = new Date(checkDate + "T12:00:00Z");
+    for (let i = 0; i < 365; i++) {
+      d.setDate(d.getDate() - 1);
+      const ds = d.toISOString().slice(0, 10);
+      if (tasksRef.current.some((t) => t.createdAt.slice(0, 10) === ds))
+        return ds;
+    }
+    return null;
+  };
+
+  const checkMidnight = () => {
     const today = getTodayStr();
-    const todayTasks = tasks.filter(
-      (t) => t.createdAt.slice(0, 10) === today
-    );
-
-    if (todayTasks.length === 0) return;
-
-    const allDone = todayTasks.every((t) => t.completed);
+    const currentTasks = tasksRef.current;
 
     setStreak((prev) => {
-      if (!allDone) return prev;
+      if (prev.lastProcessedDate === today) return prev;
 
-      if (prev.lastCompletedDate === today) return prev;
+      const startDate = prev.lastProcessedDate || getYesterdayStr();
 
-      const yesterday = getYesterdayStr();
-      const isConsecutive = prev.lastCompletedDate === yesterday;
-      const newCurrent = isConsecutive ? prev.currentStreak + 1 : 1;
+      const datesToCheck = [];
+      let d = new Date(startDate + "T12:00:00Z");
+      const todayDate = new Date(today + "T12:00:00Z");
+      d.setDate(d.getDate() + 1);
+
+      while (d < todayDate) {
+        datesToCheck.push(d.toISOString().slice(0, 10));
+        d.setDate(d.getDate() + 1);
+      }
+
+      if (datesToCheck.length === 0) {
+        return { ...prev, lastProcessedDate: startDate };
+      }
+
+      let newStreak = prev.currentStreak;
+      let newLastCompleted = prev.lastCompletedDate;
+      let failed = false;
+
+      for (const dayStr of datesToCheck) {
+        const dayTasks = currentTasks.filter(
+          (t) => t.createdAt.slice(0, 10) === dayStr
+        );
+
+        if (dayTasks.length === 0) continue;
+
+        const allDone = dayTasks.every((t) => t.completed);
+
+        if (!failed && allDone) {
+          const prevActiveDay = findPreviousActiveDay(dayStr);
+          const isConsecutive =
+            prevActiveDay === null || prevActiveDay === newLastCompleted;
+          newStreak = isConsecutive ? newStreak + 1 : 1;
+          newLastCompleted = dayStr;
+        } else if (!allDone) {
+          failed = true;
+          newStreak = 0;
+          newLastCompleted = null;
+        }
+      }
 
       return {
-        currentStreak: newCurrent,
-        longestStreak: Math.max(prev.longestStreak, newCurrent),
-        lastCompletedDate: today,
+        currentStreak: failed ? 0 : newStreak,
+        longestStreak: Math.max(prev.longestStreak, failed ? 0 : newStreak),
+        lastCompletedDate: failed ? null : newLastCompleted,
+        lastProcessedDate: today,
       };
     });
+  };
+
+  useEffect(() => {
+    checkMidnight();
   }, [tasks]);
+
+  useEffect(() => {
+    const interval = setInterval(checkMidnight, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const addTask = (text) => {
     setTasks((prev) => [
@@ -95,20 +159,9 @@ function TodoApp() {
   };
 
   const toggleTask = (id) => {
-    setTasks((prev) => {
-      const task = prev.find((t) => t.id === id);
-      if (task && task.completed) {
-        setStreak((s) => {
-          const revertedStreak = Math.max(0, s.currentStreak - 1);
-          return {
-            currentStreak: revertedStreak,
-            longestStreak: s.longestStreak,
-            lastCompletedDate: revertedStreak > 0 ? getYesterdayStr() : null,
-          };
-        });
-      }
-      return prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t));
-    });
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+    );
   };
 
   const deleteTask = (id) => {
